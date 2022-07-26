@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:live_tracking/helpers/user_helper.dart';
+import 'package:live_tracking/modules/dashboard/view/dashboard_page.dart';
 import 'package:live_tracking/modules/login/view/login_page.dart';
 import 'package:live_tracking/modules/splash/view/splash_page.dart';
 import 'package:live_tracking/utils/constants.dart';
@@ -28,13 +29,19 @@ class NavigationHelper {
                   (context, animation, secondaryAnimation, child) =>
                       FadeTransition(opacity: animation, child: child),
             ),
-            redirect: (routerState) {
+             redirect: (routerState) {
               final loggedIn = GetIt.I<UserHelper>().isLoggedIn;
 
               if (!loggedIn) return null;
 
-              return '/';
+              return '/dashboard';
             },
+          ),
+           GoRoute(
+            path: 'dashboard',
+            name: 'dashboardpage',
+            builder: (context, routerState) => const DashboardPage(),
+            
           ),
         ],
       ),
@@ -71,5 +78,8 @@ class NavigationHelper {
 
   void goToLogin() {
     goNamed('loginpage');
+  }
+  void goToDashboard() {
+    goNamed('dashboardpage');
   }
 }
