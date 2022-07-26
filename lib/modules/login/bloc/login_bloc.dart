@@ -8,6 +8,8 @@ import 'package:live_tracking/repositories/auth_repository.dart';
 import 'package:live_tracking/utils/enums.dart';
 import 'package:live_tracking/utils/wrappers/error_wrapper.dart';
 
+import '../../../helpers/flash_message_helper.dart';
+
 part 'login_event.dart';
 
 part 'login_state.dart';
@@ -25,12 +27,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       () => _repo.submitLogin(event.email, event.password),
       onError: (e) {
         emit(LoginInitial());
+        GetIt.I<FlashMessageHelper>().showError("User not found");
       },
     );
 
     final user = GetIt.I<UserHelper>().getUser();
+    emit(LoginInitial());
 
-    
+    if (user != null) {
+      GetIt.I<NavigationHelper>().goToDashboard();
+    }
+
     //TODO: Add logic to navigate to dashboard
   }
 }

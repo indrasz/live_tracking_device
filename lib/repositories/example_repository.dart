@@ -5,7 +5,7 @@ import 'package:live_tracking/utils/constants.dart';
 class ExampleRepository extends BaseRepository {
   Future<BaseResponse<List>> getExamples(String key) async {
     final response = await get(
-      ApiEndPoint.kApiExample,
+      ApiEndPoint.kApiLogin,
       queryParameters: <String, String>{
         'search_columns': 'name',
         'search_key': key,

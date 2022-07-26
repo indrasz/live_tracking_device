@@ -16,18 +16,19 @@ class AuthRepository extends BaseRepository {
     String password,
   ) async {
     final response = await post(
-      ApiEndPoint.kApiExample,
+      ApiEndPoint.kApiLogin,
       data: {
         'email': email,
         'password': password,
       },
     );
 
-    if (response.status == ResponseStatus.success) {
+    if (response.data['status'] == 0) {
+      return BaseResponse.failure('Akun tidak valid!');
+    } else if (response.status == ResponseStatus.success) {
       final data = response.data! as MapString;
-      final rawData = data['data'] as MapString;
 
-      final user = User.fromJson(rawData);
+      final user = User.fromJson(data);
       GetIt.I<HiveService>().storeUser(user);
 
       final storage = GetIt.I<FlutterSecureStorage>();
