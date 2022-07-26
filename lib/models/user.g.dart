@@ -18,27 +18,18 @@ class UserAdapter extends TypeAdapter<User> {
     };
     return User(
       fields[0] as String,
-      fields[2] as DateTime,
-      fields[3] as DateTime,
-      fields[4] as String?,
-      fields[5] as String,
+      (fields[1] as Map).cast<String, dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(5)
-      ..writeByte(0)
-      ..write(obj.id)
       ..writeByte(2)
-      ..write(obj.createdAt)
-      ..writeByte(3)
-      ..write(obj.updatedAt)
-      ..writeByte(4)
-      ..write(obj.name)
-      ..writeByte(5)
-      ..write(obj.token);
+      ..writeByte(0)
+      ..write(obj.token)
+      ..writeByte(1)
+      ..write(obj.permissions);
   }
 
   @override
@@ -57,17 +48,11 @@ class UserAdapter extends TypeAdapter<User> {
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      json['id'] as String,
-      DateTime.parse(json['created_at'] as String),
-      DateTime.parse(json['updated_at'] as String),
-      json['name'] as String?,
-      json['token'] as String,
+      json['user_api_hash'] as String,
+      json['permissions'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'id': instance.id,
-      'created_at': instance.createdAt.toIso8601String(),
-      'updated_at': instance.updatedAt.toIso8601String(),
-      'name': instance.name,
-      'token': instance.token,
+      'user_api_hash': instance.token,
+      'permissions': instance.permissions,
     };

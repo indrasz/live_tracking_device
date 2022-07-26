@@ -7,12 +7,9 @@ part 'user.g.dart';
 @JsonSerializable(explicitToJson: true)
 @HiveType(typeId: 1)
 class User extends HiveObject {
-  User(
-    this.id,
-    this.createdAt,
-    this.updatedAt,
-    this.name,
+   User(
     this.token,
+    this.permissions,
   );
 
   /// Converter from response map data to model
@@ -22,20 +19,9 @@ class User extends HiveObject {
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
   @HiveField(0)
-  @JsonKey(name: 'id')
-  final String id;
-
-  @HiveField(2)
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
-
-  @HiveField(3)
-  @JsonKey(name: 'updated_at')
-  final DateTime updatedAt;
-
-  @HiveField(4)
-  final String? name;
-
-  @HiveField(5)
+  @JsonKey(name: 'user_api_hash')
   final String token;
+
+  @HiveField(1)
+  final Map<String, dynamic> permissions;
 }
