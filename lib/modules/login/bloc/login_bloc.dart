@@ -8,7 +8,7 @@ import 'package:live_tracking/repositories/auth_repository.dart';
 import 'package:live_tracking/utils/enums.dart';
 import 'package:live_tracking/utils/wrappers/error_wrapper.dart';
 
-import '../../../helpers/flash_message_helper.dart';
+import 'package:live_tracking/helpers/flash_message_helper.dart';
 
 part 'login_event.dart';
 

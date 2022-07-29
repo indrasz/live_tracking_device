@@ -30,4 +30,7 @@ class GetItContainer {
   static void initializeConfig(Dio dio) {
     GetIt.I.registerSingleton<Dio>(dio);
   }
+  static void initializeConfiginInIsolates(Dio dio) {
+    GetIt.I.registerSingleton<Dio>(dio);
+  }
 }

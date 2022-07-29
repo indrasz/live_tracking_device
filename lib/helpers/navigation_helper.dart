@@ -18,25 +18,25 @@ class NavigationHelper {
         builder: (context, routerState) => const SplashPage(),
         redirect: redirectWhenAuthenticate,
         routes: [
-          GoRoute(
-            path: 'login',
-            name: 'loginpage',
-            // builder: (context, routerState) => const LoginPage(),
-            pageBuilder: (context, state) => CustomTransitionPage<void>(
-              key: state.pageKey,
-              child: const LoginPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) =>
-                      FadeTransition(opacity: animation, child: child),
-            ),
-             redirect: (routerState) {
-              final loggedIn = GetIt.I<UserHelper>().isLoggedIn;
+          // GoRoute(
+          //   path: 'login',
+          //   name: 'loginpage',
+          //   // builder: (context, routerState) => const LoginPage(),
+          //   pageBuilder: (context, state) => CustomTransitionPage<void>(
+          //     key: state.pageKey,
+          //     child: const LoginPage(),
+          //     transitionsBuilder:
+          //         (context, animation, secondaryAnimation, child) =>
+          //             FadeTransition(opacity: animation, child: child),
+          //   ),
+          //    redirect: (routerState) {
+          //     final loggedIn = GetIt.I<UserHelper>().isLoggedIn;
 
-              if (!loggedIn) return null;
+          //     if (!loggedIn) return null;
 
-              return '/dashboard';
-            },
-          ),
+          //     return '/dashboard';
+          //   },
+          // ),
            GoRoute(
             path: 'dashboard',
             name: 'dashboardpage',
@@ -49,9 +49,9 @@ class NavigationHelper {
   );
 
   static String? redirectWhenAuthenticate(GoRouterState routerState) {
-    final loggedIn = GetIt.I<UserHelper>().isLoggedIn;
+    // final loggedIn = GetIt.I<UserHelper>().isLoggedIn;
 
-    if (!loggedIn) return '/login';
+    // if (!loggedIn) return '/login';
 
     return '/dashboard';
   }
