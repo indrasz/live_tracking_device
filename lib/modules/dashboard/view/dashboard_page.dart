@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,6 +74,9 @@ class _DashboardPageState extends State<DashboardPage> {
                               create: (context) =>
                                   GeolocationBloc()..add(LoadGeolocation()),
                             ),
+                            // BlocProvider(
+                            //   create: (context) => GeolocationBloc(),
+                            // ),
                           ],
                           child: const _FormBodyWidget(),
                         ),
@@ -135,24 +139,36 @@ class _DashboardPageState extends State<DashboardPage> {
 class _FormBodyWidget extends StatelessWidget {
   const _FormBodyWidget({Key? key}) : super(key: key);
 
-  // void _submit(BuildContext context) {
-  //   final formKey = context.read<FormKeyCubit>().state;
-
-  //   if (!formKey.currentState!.validate()) return;
-
-  //   final values = context.read<FormValuesCubit>().state;
-
-  //   context.read<LoginBloc>().add(
-  //         LoginSubmitEvent(
-  //           email: values.email,
-  //           password: values.password,
-  //         ),
-  //       );
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // final isVisible = context.watch<VisibilityPasswordCubit>().state;
+    void _submit(
+      double altitude,
+      double speed,
+      double lat,
+      double long,
+      double bearing,
+    ) {
+      // final values = context.read<GeolocationLoadedSuccess>();
+
+      // context.read<GeolocationBloc>().add(
+      //       SendGeolocationEvent(
+      //         altitude: values.position.altitude,
+      //         speed: values.position.speed,
+      //         lat: values.position.altitude,
+      //         long: values.position.longitude,
+      //         timestamp: values.position.timestamp!,
+      //       ),
+      //     );
+      BlocProvider.of<GeolocationBloc>(context).add(
+        SendGeolocationEvent(
+          altitude: altitude,
+          speed: speed,
+          lat: lat,
+          long: long,
+          bearing: bearing
+        ),
+      );
+    }
 
     return BlocBuilder<GeolocationBloc, GeolocationState>(
       builder: (context, state) {
@@ -176,10 +192,37 @@ class _FormBodyWidget extends StatelessWidget {
                   'Speed : ${state.position.speed.toString()}',
                   style: TextStyle(color: Colors.red),
                 ),
-
                 Text(
                   'Timestamp : ${state.position.timestamp.toString()}',
                   style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () => _submit(
+                    state.position.altitude,
+                    state.position.speed,
+                    state.position.latitude,
+                    state.position.longitude,
+                    state.position.heading,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: ColorName.primary,
+                    onPrimary: ColorName.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: const SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: Center(
+                      child: Text(
+                        'Send',
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -190,7 +233,7 @@ class _FormBodyWidget extends StatelessWidget {
           );
         } else {
           return const Center(
-            child: Text('TOLOOOOOOL'),
+            child: Text('Error'),
           );
         }
       },

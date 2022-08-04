@@ -1,50 +1,66 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:isolate';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:live_tracking/helpers/flash_message_helper.dart';
+import 'package:live_tracking/helpers/user_helper.dart';
 import 'package:live_tracking/models/base_response.dart';
 import 'package:live_tracking/models/telematic.dart';
 import 'package:live_tracking/models/user.dart';
 import 'package:live_tracking/repositories/base_repository.dart';
+import 'package:live_tracking/repositories/geolocation_repository.dart';
+import 'package:live_tracking/repositories/main_repository.dart';
 import 'package:live_tracking/services/hive_service.dart';
 import 'package:live_tracking/utils/constants.dart';
 import 'package:live_tracking/utils/enums.dart';
 import 'package:live_tracking/utils/exceptions.dart';
+import 'package:live_tracking/utils/get_it.dart';
 import 'package:live_tracking/utils/typedefs.dart';
+import 'package:logger/logger.dart';
 
 class TelematicRepository extends BaseRepository {
-  Future<BaseResponse<Telematic>> sendTelematic(
-    num altitude,
-    num bearing,
-    num ion,
-    int hdop,
-    num lat,
-  ) async {
-    final response = await post(
-      ApiEndPoint.kApiSendTelematic,
-      data: {
-        'altitude': altitude,
-        'bearing': bearing,
-        'ion' : ion,
-        'hdop' : hdop,
-        'lat' : lat,
+
+Future<void> init(SendPort port) async {
+    try {
+      final dio = _setupDio('en', false);
+
+      GetItContainer.initializeConfiginInIsolates(dio);
+
+      Timer.periodic(const Duration(milliseconds : 5000), (timer) async{
+        try{
+          final devices = await GeolocationRepository().getCurrentLocation();
+          final encoded = jsonEncode(devices);
+
+          port.send(encoded);
+        }catch (e){
+          Logger().e(e);
+        }
+      });
+    } catch (e) {
+      GetIt.I<FlashMessageHelper>()
+          .showError(e.toString(), duration: const Duration(seconds: 5));
+    }
+  }
+
+  Dio _setupDio(String lang, bool isUserIntercept) {
+    final options = BaseOptions(
+      baseUrl: kBaseUrl,
+      connectTimeout: 16000,
+      receiveTimeout: 16000,
+      sendTimeout: 16000,
+      headers: <String, dynamic>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-localization': lang,
+        'Access-Control-Allow-Origin': '*',
       },
     );
 
-    if (response.data['status'] == 0) {
-      return BaseResponse.failure('Invalid send!');
-    } else if (response.status == ResponseStatus.success) {
-      final data = response.data! as MapString;
-
-      final telematic = Telematic.fromJson(data);
-      // GetIt.I<HiveService>().storeUser(telematic);
-
-      final storage = GetIt.I<FlutterSecureStorage>();
-
-      // await storage.write(key: kAccessToken, value: user.token);
-
-      return BaseResponse.success(telematic);
-    }
-    throw CustomExceptionString(response.message ?? 'Unknown error');
+    final dio = Dio(options);
+    return dio;
   }
 }
 

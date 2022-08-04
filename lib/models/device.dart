@@ -12,7 +12,7 @@ class Device extends HiveObject {
     this.speed,
     this.lat,
     this.long,
-    this.timestamp
+    this.bearing,
   );
 
   /// Converter from response map data to model
@@ -34,6 +34,6 @@ class Device extends HiveObject {
   final double long ;
 
   @HiveField(4)
-  final DateTime timestamp ;
+  final double bearing ;
   
 }

@@ -20,12 +20,6 @@ class MainRepository {
       final dio = _setupDio(lang);
       GetItContainer.initializeConfig(dio);
 
-      // Timer.periodic(const Duration(milliseconds: 5000), (timer) async{
-      //   try{
-      //     final telematic = await TelematicRepository().sendTelematic(altitude, bearing, ion, hdop, lat)
-      //   }
-      // });
-
     } catch (e) {
       GetIt.I<FlashMessageHelper>().showError(
         e.toString(),
@@ -54,28 +48,28 @@ class MainRepository {
 
     final dio = Dio(options);
 
-    // if (isUserIntercept) {
-    //   dio.interceptors.add(
-    //     LogInterceptor(responseBody: true, requestBody: true),
-    //   );
-    // }
+    if (isUserIntercept) {
+      dio.interceptors.add(
+        LogInterceptor(responseBody: true, requestBody: true),
+      );
+    }
 
-    // dio.interceptors.add(
-    //   InterceptorsWrapper(
-    //     onRequest: (options, handler) {
-    //       return handler.next(options);
-    //     },
-    //     onResponse: (response, handler) {
-    //       return handler.next(response);
-    //     },
-    //     onError: (DioError e, handler) {
-    //       if (e.response != null && e.response!.statusCode == 401) {
-    //         GetIt.I<UserHelper>().logout();
-    //       }
-    //       return handler.next(e);
-    //     },
-    //   ),
-    // );
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          return handler.next(response);
+        },
+        onError: (DioError e, handler) {
+          if (e.response != null && e.response!.statusCode == 401) {
+            GetIt.I<UserHelper>().logout();
+          }
+          return handler.next(e);
+        },
+      ),
+    );
 
     return dio;
   }

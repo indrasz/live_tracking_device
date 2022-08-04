@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -32,5 +33,9 @@ class GetItContainer {
   }
   static void initializeConfiginInIsolates(Dio dio) {
     GetIt.I.registerSingleton<Dio>(dio);
+  }
+
+  static void InitializeIssolate(FlutterIsolate isolate) {
+    GetIt.I.registerSingleton<FlutterIsolate>(isolate);
   }
 }

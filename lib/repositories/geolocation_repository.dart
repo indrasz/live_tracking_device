@@ -38,7 +38,7 @@ class GeolocationRepository extends BaseRepository {
     double speed,
     double lat,
     double long,
-    DateTime timestamp,
+    double bearing
   ) async {
     final response = await post(
       ApiEndPoint.kApiSendTelematic,
@@ -47,7 +47,7 @@ class GeolocationRepository extends BaseRepository {
         'speed': speed,
         'lat' : lat,
         'long' : long,
-        'timestamp' : timestamp
+        'bearing' : bearing
       },
     );
 
@@ -55,7 +55,6 @@ class GeolocationRepository extends BaseRepository {
       final data = response.data! as MapString;
       final rawData = data as MapString;
       final device = Device.fromJson(rawData);
-      final storage = GetIt.I<FlutterSecureStorage>();
 
       return BaseResponse.success(device);
     }

@@ -1,25 +1,43 @@
 part of 'form_telematic_cubit.dart';
 
 class FormTelematicState extends Equatable {
-  const FormTelematicState(this.email, this.password);
+  const FormTelematicState(
+    this.altitude,
+    this.speed,
+    this.lat,
+    this.long,
+    this.timestamp,
+  );
 
-  factory FormTelematicState.initial() => const FormTelematicState(
-        kDebugMode ? 'dashboard.dev@transtrack.id' : '',
-        kDebugMode ? '1234qwer' : '',
-      );
+  // factory FormTelematicState.initial() => const FormTelematicState(
+  //       0,
+  //       '',
+  //       '',
+  //       '',
+  //       '',
+  //     );
 
-  final String email;
-  final String password;
+  final double altitude;
+  final double speed;
+  final double lat;
+  final double long;
+  final DateTime timestamp;
 
   FormTelematicState copyWith({
-    String? email,
-    String? password,
+    double? altitude,
+    double? speed,
+    double? lat,
+    double? long,
+    DateTime? timestamp,
   }) =>
       FormTelematicState(
-        email ?? this.email,
-        password ?? this.password,
+        altitude ?? this.altitude,
+        speed ?? this.speed,
+        lat ?? this.lat,
+        long ?? this.long,
+        timestamp ?? this.timestamp,
       );
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [altitude, speed, lat, long, timestamp];
 }

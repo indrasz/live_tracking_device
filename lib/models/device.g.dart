@@ -21,7 +21,7 @@ class DeviceAdapter extends TypeAdapter<Device> {
       fields[1] as double,
       fields[2] as double,
       fields[3] as double,
-      fields[4] as DateTime,
+      fields[4] as double,
     );
   }
 
@@ -38,7 +38,7 @@ class DeviceAdapter extends TypeAdapter<Device> {
       ..writeByte(3)
       ..write(obj.long)
       ..writeByte(4)
-      ..write(obj.timestamp);
+      ..write(obj.bearing);
   }
 
   @override
@@ -61,7 +61,7 @@ Device _$DeviceFromJson(Map<String, dynamic> json) => Device(
       (json['speed'] as num).toDouble(),
       (json['lat'] as num).toDouble(),
       (json['long'] as num).toDouble(),
-      DateTime.parse(json['timestamp'] as String),
+      (json['bearing'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$DeviceToJson(Device instance) => <String, dynamic>{
@@ -69,5 +69,5 @@ Map<String, dynamic> _$DeviceToJson(Device instance) => <String, dynamic>{
       'speed': instance.speed,
       'lat': instance.lat,
       'long': instance.long,
-      'timestamp': instance.timestamp.toIso8601String(),
+      'bearing': instance.bearing,
     };
